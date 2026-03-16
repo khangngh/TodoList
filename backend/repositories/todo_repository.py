@@ -3,11 +3,12 @@ from models.todo_model import Todo
 from datetime import datetime
 
 
-def create_todo(db: Session, title: str, description: str | None):
+def create_todo(db, title, description, owner_id):
 
     todo = Todo(
         title=title,
-        description=description
+        description=description,
+        owner_id=owner_id
     )
 
     db.add(todo)
@@ -17,14 +18,24 @@ def create_todo(db: Session, title: str, description: str | None):
     return todo
 
 
-def get_todos(db: Session, limit: int, offset: int):
+def get_todos(db, owner_id, limit, offset):
 
-    return db.query(Todo).offset(offset).limit(limit).all()
+    return (
+        db.query(Todo)
+        .filter(Todo.owner_id == owner_id)
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
 
 
-def get_total(db: Session):
+def get_total(db, owner_id):
 
-    return db.query(Todo).count()
+    return (
+        db.query(Todo)
+        .filter(Todo.owner_id == owner_id)
+        .count()
+    )
 
 
 def get_todo(db: Session, todo_id: int):
@@ -43,3 +54,13 @@ def update_todo(db: Session, todo, data: dict):
     db.refresh(todo)
 
     return todo
+
+def get_todos(db, owner_id, limit, offset):
+
+    return (
+        db.query(Todo)
+        .filter(Todo.owner_id == owner_id)
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
