@@ -2,9 +2,9 @@ from repositories.todo_repository import *
 from fastapi import HTTPException
 
 
-def create_new_todo(db, title, description, owner_id):
+def create_new_todo(db, title, description, owner_id, due_date=None, tags=None):
 
-    return create_todo(db, title, description, owner_id)
+    return create_todo(db, title, description, owner_id, due_date, tags)
 
 
 def list_todos(db, owner_id, limit, offset):
@@ -38,3 +38,11 @@ def get_todo_by_owner(db, todo_id, owner_id):
         raise HTTPException(404, "Todo not found")
 
     return todo
+
+
+def get_overdue_todos_service(db, owner_id):
+    return get_overdue_todos(db, owner_id)
+
+
+def get_today_todos_service(db, owner_id):
+    return get_today_todos(db, owner_id)
